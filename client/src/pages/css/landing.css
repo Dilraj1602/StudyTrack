@@ -1,0 +1,103 @@
+@media (max-width: 900px) {
+  .landing-hero-flex { flex-direction: column !important; gap: 2rem !important; }
+  .landing-grid-3col { grid-template-columns: 1fr !important; }
+}
+.hero-image-wrapper {
+  perspective: 1000px;
+  background: transparent;
+}
+.hero-image {
+  transform: rotateX(15deg) scale(1);
+  transition: transform 0.5s cubic-bezier(.4,2,.3,1);
+  will-change: transform;
+  width: 100%;
+  height: auto;
+}
+.hero-image.scrolled {
+  transform: rotateX(0deg) scale(1) translateY(40px);
+}
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient {
+}
+.stats-bar {
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  position: relative;
+  background: #f6f8fa;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 3.5rem 0 3.5rem 0;
+  margin-top: 64px;
+  margin-bottom: 64px;
+}
+@media (max-width: 900px) {
+  .stats-bar { flex-direction: column; gap: 1.5rem; padding: 1.2rem 0; }
+}
+.how-works-bg {
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  position: relative;
+  background: #f6f8fa;
+  padding: 4rem 0 3rem 0;
+  margin-bottom: 64px;
+}
+.how-works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 96px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+@media (max-width: 900px) {
+  .how-works-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+.testimonials-bg {
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  position: relative;
+  background: #fff;
+  padding: 4rem 0 3rem 0;
+  margin-bottom: 64px;
+  display: flex;
+  justify-content: center;
+}
+.testimonials-center {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+}
+.features-section {
+  margin-bottom: 64px;
+  background: #fff;
+}
+.footer-large {
+  background: #3b82f6;
+  color: #fff;
+  text-align: center;
+  padding: 5rem 0 3.5rem 0;
+  margin-top: auto;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+.footer-large span, .footer-large br {
+  margin-top: 1rem;
+  display: block;
+} 

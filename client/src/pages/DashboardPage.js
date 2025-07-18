@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useState as useReactState } from 'react';
 import initialTasksData from '../utils/data';
 import toast, { Toaster } from 'react-hot-toast';
+import './css/dashboard.css';
 
 const FILTERS = [
   { label: 'All', value: 'All' },
@@ -65,7 +66,7 @@ const DashboardPage = () => {
   const [sort, setSort] = useState('date_desc');
   const [editTaskId, setEditTaskId] = useState(null);
   const [editForm, setEditForm] = useState({ description: '', duration: '' });
-  const [addForm, setAddForm] = useState({ description: '', duration: '' });
+  const [addForm, setAddForm] = useState({ description: '', duration: '', date: '' });
   const [showDatePicker, setShowDatePicker] = useReactState(false);
   // Remove useRef and any focus logic
 
@@ -232,10 +233,10 @@ const DashboardPage = () => {
 
   const handleAddSubmit = (e) => {
     e.preventDefault();
-    if (!addForm.description.trim() || !addForm.duration.trim()) return;
+    if (!addForm.description.trim() || !addForm.duration.trim() || !addForm.date) return;
 
-    if (tasks.some(t => t.date === todayStr)) {
-      showToast(toast.error, 'Log already exists for today. You can edit it instead.');
+    if (tasks.some(t => t.date === addForm.date)) {
+      showToast(toast.error, 'Log already exists for this date. You can edit it instead.');
       return;
     }
 
@@ -243,13 +244,13 @@ const DashboardPage = () => {
       ...prev,
       {
         id: Date.now(),
-        date: todayStr,
+        date: addForm.date,
         description: addForm.description.split('\n'),
         duration: addForm.duration
       }
     ]);
 
-    setAddForm({ description: '', duration: '' });
+    setAddForm({ description: '', duration: '', date: todayStr });
     showToast(toast.success, 'Log created!');
   };
 
@@ -311,28 +312,33 @@ const DashboardPage = () => {
         </div>
 
         {/* Add Form */}
-        {!tasks.some(t => t.date === todayStr) && (
-          <form onSubmit={handleAddSubmit} style={formCardStyle}>
-            <div style={{ fontWeight: 600, marginBottom: 6 }}>Add New Log (Today)</div>
-            <textarea
-              value={addForm.description}
-              onChange={e => setAddForm(f => ({ ...f, description: e.target.value }))}
-              rows={3}
-              placeholder={'1. Task description\n2. Task description'}
-              style={textAreaStyle}
+        <form onSubmit={handleAddSubmit} className="add-form">
+          <div className="add-form-header">Add New Log</div>
+          <input
+            type="date"
+            value={addForm.date}
+            onChange={e => setAddForm(f => ({ ...f, date: e.target.value }))}
+            className="add-form-input"
+            required
+          />
+          <textarea
+            value={addForm.description}
+            onChange={e => setAddForm(f => ({ ...f, description: e.target.value }))}
+            rows={3}
+            placeholder={'1. Task description\n2. Task description'}
+            className="add-form-textarea"
+          />
+          <div className="add-form-footer">
+            <input
+              type="text"
+              value={addForm.duration}
+              onChange={e => setAddForm(f => ({ ...f, duration: e.target.value }))}
+              placeholder="Total Duration (01:30:00)"
+              className="add-form-input"
             />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <input
-                type="text"
-                value={addForm.duration}
-                onChange={e => setAddForm(f => ({ ...f, duration: e.target.value }))}
-                placeholder="Total Duration (e.g. 01:30:00)"
-                style={inputStyle}
-              />
-              <button type="submit" style={buttonStyle}>Add Log</button>
-            </div>
-          </form>
-        )}
+            <button type="submit" className="add-form-button">Add Log</button>
+          </div>
+        </form>
 
         {/* Logs */}
         <div style={formCardStyle}>
@@ -463,3 +469,4 @@ const StatCard = ({ label, value }) => (
 );
 
 export default DashboardPage;
+ 

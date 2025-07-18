@@ -1,0 +1,72 @@
+.add-edit-task-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+}
+.add-edit-task-form {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.form-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: #2563eb;
+  letter-spacing: 0.2px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.form-label {
+  font-size: 0.97rem;
+  color: #333;
+  font-weight: 500;
+}
+.form-input {
+  padding: 0.7rem;
+  border: 1px solid #e0e7ef;
+  border-radius: 7px;
+  font-size: 1rem;
+  outline: none;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.form-textarea {
+  padding: 0.7rem;
+  border: 1px solid #e0e7ef;
+  border-radius: 7px;
+  font-size: 1rem;
+  outline: none;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+}
+.submit-button {
+  margin-top: 0.5rem;
+  padding: 0.7rem;
+  border-radius: 7px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+} 
