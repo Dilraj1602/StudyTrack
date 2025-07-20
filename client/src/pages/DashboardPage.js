@@ -2,6 +2,7 @@ import React, { useState, useMemo, useRef, useState as useReactState } from 'rea
 import initialTasksData from '../utils/data';
 import toast, { Toaster } from 'react-hot-toast';
 import './css/dashboard.css';
+import { getTasks, createTask, updateTask, deleteTask } from '../api';
 
 const FILTERS = [
   { label: 'All', value: 'All' },
@@ -60,18 +61,30 @@ const CalendarIcon = ({ onClick }) => (
 );
 
 const DashboardPage = () => {
-  const [tasks, setTasks] = useState(initialTasksData);
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('date_desc');
   const [editTaskId, setEditTaskId] = useState(null);
-  const [editForm, setEditForm] = useState({ description: '', duration: '' });
-  const [addForm, setAddForm] = useState({ description: '', duration: '', date: '' });
+  const [editForm, setEditForm] = useState({ tasks: '', duration: '' });
+  const [addForm, setAddForm] = useState({ tasks: '', duration: '', date: '' });
   const [showDatePicker, setShowDatePicker] = useReactState(false);
   // Remove useRef and any focus logic
 
   const today = new Date();
   const todayStr = today.toISOString().slice(0, 10);
+
+  React.useEffect(() => {
+    async function fetchTasks() {
+      try {
+        const res = await getTasks();
+        setTasks(res.data);
+      } catch (err) {
+        toast.error('Failed to load tasks');
+      }
+    }
+    fetchTasks();
+  }, []);
 
   const filteredTasks = useMemo(() => {
     let arr = [...tasks];
@@ -167,91 +180,57 @@ const DashboardPage = () => {
     return `${h}:${m}:${s}`;
   })();
 
-  const handleDelete = (date) => {
-    toast.custom((t) => (
-      <div style={{
-        position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-        zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        pointerEvents: 'none',
-      }}>
-        <div style={{
-          position: 'relative', background: '#fff', borderRadius: 12, boxShadow: '0 4px 32px rgba(0,0,0,0.18)',
-          padding: '2rem 2.5rem', zIndex: 100000, minWidth: 320, textAlign: 'center',
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          pointerEvents: 'auto',
-        }}>
-          <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: 18 }}>Are you sure you want to delete this log?</div>
-          <div style={{ display: 'flex', gap: 16 }}>
-            <button
-              onClick={() => {
-                setTasks(prev => prev.filter(t => t.date !== date));
-                toast.dismiss(t.id);
-                showToast(toast.success, 'Log deleted!');
-              }}
-              style={{
-                background: '#dc2626', color: '#fff', border: 'none', borderRadius: 6,
-                padding: '0.5rem 1.5rem', fontWeight: 600, cursor: 'pointer', fontSize: '1rem',
-              }}
-            >
-              Delete
-            </button>
-            <button
-              onClick={() => toast.dismiss(t.id)}
-              style={{
-                background: '#e5e7eb', color: '#222', border: 'none', borderRadius: 6,
-                padding: '0.5rem 1.5rem', fontWeight: 600, cursor: 'pointer', fontSize: '1rem',
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
-    ), { duration: Infinity });
-  };
-
   const handleEdit = (task) => {
-    setEditTaskId(task.id);
+    setEditTaskId(task._id);
     setEditForm({
-      description: task.description.join('\n'),
+      tasks: (task.tasks || []).join('\n'),
       duration: task.duration
     });
   };
 
-  const handleEditSubmit = (e, task) => {
+  const handleEditSubmit = async (e, task) => {
     e.preventDefault();
-    setTasks(prev =>
-      prev.map(t =>
-        t.id === task.id
-          ? { ...t, description: editForm.description.split('\n'), duration: editForm.duration }
-          : t
-      )
-    );
-    setEditTaskId(null);
-    showToast(toast.success, 'Log updated!');
+    try {
+      const updated = {
+        date: task.date,
+        tasks: editForm.tasks.split('\n'),
+        duration: editForm.duration
+      };
+      const res = await updateTask(task._id, updated);
+      setTasks(prev => prev.map(t => t._id === task._id ? res.data : t));
+      setEditTaskId(null);
+      showToast(toast.success, 'Log updated!');
+    } catch (err) {
+      toast.error('Failed to update log');
+    }
   };
 
-  const handleAddSubmit = (e) => {
+  const handleAddSubmit = async (e) => {
     e.preventDefault();
-    if (!addForm.description.trim() || !addForm.duration.trim() || !addForm.date) return;
-
-    if (tasks.some(t => t.date === addForm.date)) {
-      showToast(toast.error, 'Log already exists for this date. You can edit it instead.');
-      return;
-    }
-
-    setTasks(prev => [
-      ...prev,
-      {
-        id: Date.now(),
+    if (!addForm.tasks.trim() || !addForm.duration.trim() || !addForm.date) return;
+    try {
+      const payload = {
         date: addForm.date,
-        description: addForm.description.split('\n'),
+        tasks: addForm.tasks.split('\n'),
         duration: addForm.duration
-      }
-    ]);
+      };
+      const res = await createTask(payload);
+      setTasks(prev => [...prev, res.data]);
+      setAddForm({ tasks: '', duration: '', date: todayStr });
+      showToast(toast.success, 'Log created!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to add log');
+    }
+  };
 
-    setAddForm({ description: '', duration: '', date: todayStr });
-    showToast(toast.success, 'Log created!');
+  const handleDelete = async (id) => {
+    try {
+      await deleteTask(id);
+      setTasks(prev => prev.filter(t => t._id !== id));
+      showToast(toast.success, 'Log deleted!');
+    } catch (err) {
+      toast.error('Failed to delete log');
+    }
   };
 
   return (
@@ -322,8 +301,8 @@ const DashboardPage = () => {
             required
           />
           <textarea
-            value={addForm.description}
-            onChange={e => setAddForm(f => ({ ...f, description: e.target.value }))}
+            value={addForm.tasks}
+            onChange={e => setAddForm(f => ({ ...f, tasks: e.target.value }))}
             rows={3}
             placeholder={'1. Task description\n2. Task description'}
             className="add-form-textarea"
@@ -352,12 +331,12 @@ const DashboardPage = () => {
                 {formatDate(date)}
               </div>
               {logs.map(task => (
-                <div key={task.id} style={{ marginBottom: '1.2rem' }}>
-                  {editTaskId === task.id ? (
+                <div key={task._id} style={{ marginBottom: '1.2rem' }}>
+                  {editTaskId === task._id ? (
                     <form onSubmit={e => handleEditSubmit(e, task)}>
                       <textarea
-                        value={editForm.description}
-                        onChange={e => setEditForm(f => ({ ...f, description: e.target.value }))}
+                        value={editForm.tasks}
+                        onChange={e => setEditForm(f => ({ ...f, tasks: e.target.value }))}
                         rows={3}
                         style={textAreaStyle}
                       />
@@ -372,19 +351,17 @@ const DashboardPage = () => {
                     </form>
                   ) : (
                     <>
-                      <ol style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                        {task.description.map((desc, i) => (
-                          <li key={i} style={{ fontSize: '1.05rem', color: '#333', marginBottom: 2 }}>
-                            {i + 1}. {desc}
-                          </li>
-                        ))}
-                        <li style={{ fontWeight: 600, color: '#2563eb', marginTop: 8 }}>
-                          total- {task.duration}
-                        </li>
-                      </ol>
+                      {(task.tasks || []).map((desc, i) => (
+                        <div key={i} style={{ fontSize: '1.05rem', color: '#333', marginBottom: 2 }}>
+                          {desc}
+                        </div>
+                      ))}
+                      <div style={{ fontWeight: 600, color: '#2563eb', marginTop: 8 }}>
+                        total- {task.duration}
+                      </div>
                       <div style={{ marginTop: 6 }}>
                         <button onClick={() => handleEdit(task)} style={{ ...buttonStyle, marginRight: 8 }}>Edit</button>
-                        <button onClick={() => handleDelete(date)} style={deleteButtonStyle}>Delete</button>
+                        <button onClick={() => handleDelete(task._id)} style={deleteButtonStyle}>Delete</button>
                       </div>
                     </>
                   )}

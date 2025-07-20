@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './css/addedittask.css';
+import { createTask } from '../api';
 
 const AddEditTaskPage = () => {
   const [form, setForm] = useState({
@@ -12,9 +13,20 @@ const AddEditTaskPage = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    // Handle add/edit logic here
+    try {
+      const payload = {
+        date: form.date,
+        tasks: form.description.split('\n'),
+        duration: form.duration
+      };
+      await createTask(payload);
+      alert('Task added successfully!');
+      setForm({ date: '', description: '', duration: '' });
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to add task');
+    }
   };
 
   return (
