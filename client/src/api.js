@@ -10,6 +10,9 @@ export const login = (data) => API.post('/auth/login', data);
 
 // Task API functions
 export const getTasks = () => API.get('/tasks');
+
+
+export const getMonthlyStats = (year) => API.get(`/tasks/monthly-stats/${year}`);
 export const createTask = (data) => API.post('/tasks', data);
 export const updateTask = (id, data) => API.put(`/tasks/${id}`, data);
 export const deleteTask = (id) => API.delete(`/tasks/${id}`);

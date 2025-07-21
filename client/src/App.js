@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import AddEditTaskPage from './pages/AddEditTaskPage';
 import NotFoundPage from './pages/NotFoundPage';
 import DemoPage from './pages/DemoPage';
+import './styles/global.css';
 
 function App() {
   return (

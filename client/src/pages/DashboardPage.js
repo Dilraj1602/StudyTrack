@@ -3,6 +3,7 @@ import initialTasksData from '../utils/data';
 import toast, { Toaster } from 'react-hot-toast';
 import './css/dashboard.css';
 import { getTasks, createTask, updateTask, deleteTask } from '../api';
+import MonthlyChart from '../components/MonthlyChart';
 
 const FILTERS = [
   { label: 'All', value: 'All' },
@@ -61,7 +62,7 @@ const CalendarIcon = ({ onClick }) => (
 );
 
 const DashboardPage = () => {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(initialTasksData);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('date_desc');
@@ -84,6 +85,7 @@ const DashboardPage = () => {
       }
     }
     fetchTasks();
+    // console.log(tasks, 'tasks');
   }, []);
 
   const filteredTasks = useMemo(() => {
@@ -243,6 +245,11 @@ const DashboardPage = () => {
         }}>
           Study Dashboard
         </h2>
+
+        {/* Monthly Chart */}
+        <MonthlyChart tasks={tasks} />
+
+
 
         {/* Stats */}
         <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', marginBottom: '2rem' }}>
