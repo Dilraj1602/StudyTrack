@@ -11,6 +11,7 @@ import DemoPage from './pages/DemoPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import './styles/global.css';
 import axios from 'axios';
+import ChatWidget from './components/ChatWidget';
 
 // PrivateRoute component using async API check
 function PrivateRoute({ children }) {
@@ -42,6 +43,20 @@ function PrivateRoute({ children }) {
 }
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  React.useEffect(() => {
+    async function checkLogin() {
+      try {
+        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
+        const res = await axios.get(`${API_URL}/auth/current-user`, { withCredentials: true });
+        setIsLoggedIn(res.data.loggedIn);
+      } catch {
+        setIsLoggedIn(false);
+      }
+    }
+    checkLogin();
+  }, []);
+
   return (
     <Router>
       <Navbar />
@@ -57,6 +72,7 @@ function App() {
           <Route path="/demo" element={<DemoPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <ChatWidget />
       </div>
     </Router>
   );

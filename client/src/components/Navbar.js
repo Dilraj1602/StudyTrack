@@ -36,6 +36,8 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
     setIsLoggedIn(false);
+    // Dispatch custom event for chat widget
+    window.dispatchEvent(new Event('user-logged-out'));
     navigate('/');
     setTimeout(() => window.location.reload(), 100);
   };

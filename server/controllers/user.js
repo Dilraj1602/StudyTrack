@@ -32,7 +32,7 @@ exports.getLeaderboard = async (req, res) => {
       });
     }
     leaderboard.sort((a, b) => b.totalDuration - a.totalDuration);
-    console.log('Leaderboard data:', leaderboard);
+    // console.log('Leaderboard data:', leaderboard);
     res.json(leaderboard);
   } catch (err) {
     console.error('Leaderboard error:', err);
