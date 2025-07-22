@@ -474,4 +474,17 @@ const tasks = [
   }
 ];
 
+// Utility to get a cookie by name
+export function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
+
+// Global function to check if user is logged in
+export function isLoggedIn() {
+  return !!getCookie('token');
+}
+
 export default tasks; 

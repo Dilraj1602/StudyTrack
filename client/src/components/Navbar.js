@@ -130,9 +130,12 @@ const Navbar = () => {
             </>
           )}
           {/* Logged in, not dashboard: Dashboard and Logout */}
-          {isLoggedIn && !isDashboard && (
+          {isLoggedIn && (
             <>
-              <Link to="/dashboard" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', border: '1.5px solid #2563eb', borderRadius: 8, padding: '0.4rem 1.1rem' }}>Dashboard</Link>
+              {!isDashboard && (
+                <Link to="/dashboard" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', border: '1.5px solid #2563eb', borderRadius: 8, padding: '0.4rem 1.1rem' }}>Dashboard</Link>
+              )}
+              <Link to="/leaderboard" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', border: '1.5px solid #2563eb', borderRadius: 8, padding: '0.4rem 1.1rem' }}>Leaderboard</Link>
               <button
                 onClick={handleSignOut}
                 style={hover ? { ...logoutBtnStyle, ...logoutBtnHover } : logoutBtnStyle}
@@ -142,17 +145,6 @@ const Navbar = () => {
                 <LogoutIcon /> Logout
               </button>
             </>
-          )}
-          {/* Logged in, on dashboard: Logout only */}
-          {isLoggedIn && isDashboard && (
-            <button
-              onClick={handleSignOut}
-              style={hover ? { ...logoutBtnStyle, ...logoutBtnHover } : logoutBtnStyle}
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}
-            >
-              <LogoutIcon /> Logout
-            </button>
           )}
         </div>
       </div>

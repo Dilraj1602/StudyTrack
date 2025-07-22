@@ -1,4 +1,5 @@
 const Task = require('../models/Task');
+const User = require('../models/User');
 
 exports.getTasks = async (req, res) => {
   const tasks = await Task.find({ user: req.user }).sort({ date: -1 });
@@ -13,9 +14,6 @@ exports.getMonthlyStats = async (req, res) => {
   try {
     const { year } = req.params;
     
-    // console.log('Getting monthly stats for year:', year, 'user:', req.user);
-    
-    // Validate year parameter
     if (!year || !/^\d{4}$/.test(year)) {
       return res.status(400).json({ message: 'Valid year required (YYYY format)' });
     }
@@ -76,8 +74,7 @@ exports.getMonthlyStats = async (req, res) => {
         });
       }
     }
-
-    // console.log('Final monthly data:', monthlyData);
+fix
     res.json(monthlyData);
   } catch (error) {
     console.error('Error getting monthly stats:', error);
@@ -89,6 +86,8 @@ exports.createTask = async (req, res) => {
   const { date, tasks, duration } = req.body;
   if (!date || !tasks || !duration) return res.status(400).json({ message: 'All fields required' });
   const task = await Task.create({ date, tasks, duration, user: req.user });
+  // Add the task reference to the user's tasks array
+  await User.findByIdAndUpdate(req.user, { $push: { tasks: task._id } });
   res.json(task);
 };
 

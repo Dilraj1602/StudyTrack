@@ -26,7 +26,7 @@ A full-stack web application to help you track your study sessions, coding pract
 
 1. **Clone the repository:**
    ```sh
-   git clone <your-repo-url>
+   git clone https://github.com/Dilraj1602/StudyTrack
    cd StudyTrack
    ```
 
@@ -49,8 +49,8 @@ A full-stack web application to help you track your study sessions, coding pract
 4. **Set up environment variables:**
    - In `server/`, create a `.env` file:
      ```env
-     MONGO_URI=mongodb://localhost:27017/studytrack
-     JWT_SECRET=your_jwt_secret
+     MONGO_URI=
+     JWT_SECRET=
      PORT=4000
      ```
    - Adjust `MONGO_URI` if using MongoDB Atlas.
@@ -99,10 +99,11 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ---
 
-**Made with ❤️ for productivity and progress!** 
+**Made with ❤️ for productivity and progress!**
 
 ## Future Goals
 - **Chatbot Integration:** Add an interactive chatbot to answer user questions, provide study tips, and guide users through the app.
 - **AI-Powered Insights:** Integrate AI to automatically summarize your study stats and performance, offering personalized tips to improve learning efficiency.
 - **Wellness Warnings:** Use AI to detect overwork patterns and warn users if they are studying too much, encouraging healthy study habits.
-- **Smart Recommendations:** Suggest optimal study schedules, break times, and resources based on user data and progress. 
+- **Smart Recommendations:** Suggest optimal study schedules, break times, and resources based on user data and progress.
+

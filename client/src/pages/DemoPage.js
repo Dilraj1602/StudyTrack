@@ -1,4 +1,5 @@
 import React from 'react';
+import { isLoggedIn } from '../utils/data';
 
 const steps = [
   {
@@ -45,7 +46,9 @@ const DemoPage = () => (
       ))}
     </div>
     <button
-      onClick={() => window.location.href = '/register'}
+      onClick={() => {
+        window.location.href = '/dashboard';
+      }}
       style={{ marginTop: 40, padding: '0.9rem 2.5rem', fontSize: '1.1rem', borderRadius: 8, border: 'none', background: '#2563eb', color: '#fff', fontWeight: 700, cursor: 'pointer', letterSpacing: '0.5px', boxShadow: '0 2px 12px rgba(37,99,235,0.10)' }}
     >
       Get Started
