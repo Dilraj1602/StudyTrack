@@ -49,7 +49,6 @@ exports.login = async (req, res) => {
       secure: process.env.NODE_ENV === 'production',
     };
     res.cookie('token', token, cookieOptions);
-    console.log(user);  
     res.json({ user: { id: user._id, username, email: user.email } });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
