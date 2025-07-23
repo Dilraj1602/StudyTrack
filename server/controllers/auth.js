@@ -15,7 +15,14 @@ exports.register = async (req, res) => {
     await user.save();
     // Construct username for response
     const username = `${user.firstName} ${user.lastName}`;
-    res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    // Set cookie options for cross-site support
+    const cookieOptions = {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    };
+    res.cookie('token', token, cookieOptions);
     res.json({ user: { id: user._id, username, email: user.email } });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -34,7 +41,14 @@ exports.login = async (req, res) => {
     await user.save();
     // Construct username for response
     const username = `${user.firstName} ${user.lastName}`;
-    res.cookie('token', token, { httpOnly: true, sameSite: 'lax', maxAge: 7 * 24 * 60 * 60 * 1000 });
+    // Set cookie options for cross-site support
+    const cookieOptions = {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    };
+    res.cookie('token', token, cookieOptions);
     res.json({ user: { id: user._id, username, email: user.email } });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
