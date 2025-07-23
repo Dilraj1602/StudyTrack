@@ -23,7 +23,7 @@ exports.register = async (req, res) => {
       secure: process.env.NODE_ENV === 'production' ? true : false,
     };
     res.cookie('token', token, cookieOptions);
-    res.json({ user: { id: user._id, username, email: user.email } });
+    res.json({ user: { id: user._id, username, email: user.email }, token });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
       secure: process.env.NODE_ENV === 'production' ? true : false,
     };
     res.cookie('token', token, cookieOptions);
-    res.json({ user: { id: user._id, username, email: user.email } });
+    res.json({ user: { id: user._id, username, email: user.email }, token });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
