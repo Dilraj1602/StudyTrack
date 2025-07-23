@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' ? true : false,
     };
     res.cookie('token', token, cookieOptions);
     res.json({ user: { id: user._id, username, email: user.email } });
@@ -46,7 +46,7 @@ exports.login = async (req, res) => {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' ? true : false,
     };
     res.cookie('token', token, cookieOptions);
     res.json({ user: { id: user._id, username, email: user.email } });
