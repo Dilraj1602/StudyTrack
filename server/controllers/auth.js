@@ -62,7 +62,11 @@ exports.logout = (req, res) => {
 
 exports.getCurrentUser = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    let token = req.cookies.token;
+    // Check Authorization header if no cookie
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
     if (!token) return res.json({ loggedIn: false });
     let decoded;
     try {
