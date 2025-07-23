@@ -19,24 +19,16 @@ function PrivateRoute({ children }) {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
   React.useEffect(() => {
-    async function checkAuth() {
-      try {
-        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
-        const res = await axios.get(`${API_URL}/auth/current-user`, { withCredentials: true });
-        setIsAuthenticated(res.data.loggedIn);
-      } catch {
-        setIsAuthenticated(false);
-      } finally {
-        setAuthChecked(true);
-      }
-    }
-    checkAuth();
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+    setAuthChecked(true);
   }, []);
 
   if (!authChecked) {
     return <div style={{textAlign:'center',marginTop:'3rem'}}>Checking authentication...</div>;
   }
   if (!isAuthenticated) {
+    console.log("Not authenticated");
     return <Navigate to="/login" replace />;
   }
   return children;

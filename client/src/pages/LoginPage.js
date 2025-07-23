@@ -14,10 +14,16 @@ const LoginPage = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log('Before login', form);
     try {
-      await login(form);
+      const res = await login(form);
+      console.log('After login', res);
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+      }
       window.location.href = '/dashboard';
     } catch (err) {
+      console.error('Login error:', err);
       alert(err.response?.data?.message || 'Login failed');
     }
   };

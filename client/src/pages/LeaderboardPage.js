@@ -17,7 +17,7 @@ const LeaderboardPage = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const res = await axios.get('http://localhost:4000/api/v1/tasks/leaderboard');
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/tasks/leaderboard`);
         setLeaderboard(res.data);
       } catch (err) {
         setError('Failed to load leaderboard');
