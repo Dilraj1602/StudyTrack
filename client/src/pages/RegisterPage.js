@@ -21,6 +21,8 @@ const RegisterPage = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    // Log the form data for debugging
+    console.log('Form data:', form);
     if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword) {
       alert('Please fill in all required fields.');
       return;
@@ -30,9 +32,10 @@ const RegisterPage = () => {
       return;
     }
     try {
-      // Combine firstName and lastName into username for backend
+      // Send the correct fields to the backend
       const payload = {
-        username: form.firstName + ' ' + form.lastName,
+        firstName: form.firstName,
+        lastName: form.lastName,
         email: form.email,
         password: form.password
       };
