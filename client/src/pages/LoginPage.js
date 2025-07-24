@@ -1,30 +1,55 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './css/login.css';
 import { login } from '../api';
+import axios from 'axios';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
   const [hovered, setHovered] = useState({ signup: false, forgot: false });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const validate = () => {
+    if (!form.email || !form.password) {
+      alert('Please fill in all fields.');
+      return false;
+    }
+    // Simple email regex
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
+      alert('Please enter a valid email.');
+      return false;
+    }
+    if (form.password.length < 4) {
+      alert('Password must be at least 4 characters.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('Before login', form);
+    if (!validate()) return;
+    setLoading(true);
     try {
-      const res = await login(form);
-      console.log('After login', res);
-      if (res.data.token) {
-        localStorage.setItem('token', res.data.token);
+      await login(form);
+      // Check auth state via /auth/current-user
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
+      const res = await axios.get(`${API_URL}/auth/current-user`, { withCredentials: true });
+      if (res.data.loggedIn) {
+        navigate('/dashboard');
+      } else {
+        alert('Login failed.');
       }
-      window.location.href = '/dashboard';
     } catch (err) {
-      console.error('Login error:', err);
       alert(err.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,8 +99,9 @@ const LoginPage = () => {
         <button
           type="submit"
           className="login-button"
+          disabled={loading}
         >
-          Login
+          {loading ? 'Logging in...' : 'Login'}
         </button>
         <div className="link-container">
           <Link

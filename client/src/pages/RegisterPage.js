@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './css/register.css';
 import { register } from '../api';
 
@@ -14,25 +14,38 @@ const RegisterPage = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    // Log the form data for debugging
-    console.log('Form data:', form);
+  const validate = () => {
     if (!form.firstName || !form.lastName || !form.email || !form.password || !form.confirmPassword) {
       alert('Please fill in all required fields.');
-      return;
+      return false;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) {
+      alert('Please enter a valid email.');
+      return false;
+    }
+    if (form.password.length < 4) {
+      alert('Password must be at least 4 characters.');
+      return false;
     }
     if (form.password !== form.confirmPassword) {
       alert('Passwords do not match.');
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    if (!validate()) return;
+    setLoading(true);
     try {
-      // Send the correct fields to the backend
       const payload = {
         firstName: form.firstName,
         lastName: form.lastName,
@@ -41,9 +54,11 @@ const RegisterPage = () => {
       };
       await register(payload);
       alert('Registration successful! Please log in.');
-      window.location.href = '/login';
+      navigate('/login');
     } catch (err) {
       alert(err.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -158,8 +173,9 @@ const RegisterPage = () => {
         <button
           type="submit"
           className="submit-button"
+          disabled={loading}
         >
-          Signup
+          {loading ? 'Signing up...' : 'Signup'}
         </button>
         <div className="login-link-container">
           Already have an account?{' '}

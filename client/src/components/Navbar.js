@@ -18,9 +18,13 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const checkLogin = () => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+  const checkLogin = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/auth/current-user`, { withCredentials: true });
+      setIsLoggedIn(res.data.loggedIn);
+    } catch {
+      setIsLoggedIn(false);
+    }
   };
 
   useEffect(() => {
@@ -30,7 +34,6 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
-    localStorage.removeItem('token'); // Remove token from localStorage
     setIsLoggedIn(false);
     // Dispatch custom event for chat widget
     window.dispatchEvent(new Event('user-logged-out'));

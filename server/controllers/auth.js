@@ -7,15 +7,12 @@ exports.register = async (req, res) => {
   try {
     if (!firstName || !lastName || !email || !password) return res.status(400).json({ message: 'All fields required' });
     const existing = await User.findOne({ email });
-    if (existing) return res.status(400).json({ message: 'Email already registered' });
+    if (existing) return res.status(400).json({ message: 'Registration failed' }); // generic message
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ firstName, lastName, email, password: hash });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    user.token = token;
-    await user.save();
     // Construct username for response
     const username = `${user.firstName} ${user.lastName}`;
-    // Set cookie options for cross-site support
     const cookieOptions = {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -37,11 +34,8 @@ exports.login = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: 'Invalid credentials' });
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    user.token = token;
-    await user.save();
     // Construct username for response
     const username = `${user.firstName} ${user.lastName}`;
-    // Set cookie options for cross-site support
     const cookieOptions = {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -71,7 +65,7 @@ exports.getCurrentUser = async (req, res) => {
       return res.json({ loggedIn: false });
     }
     const user = await User.findById(decoded.id);
-    if (!user || user.token !== token) return res.json({ loggedIn: false });
+    if (!user) return res.json({ loggedIn: false });
     // Construct username from firstName and lastName
     const username = `${user.firstName} ${user.lastName}`;
     res.json({ loggedIn: true, user: { id: user._id, username, email: user.email } });

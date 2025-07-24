@@ -1,5 +1,20 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
+const { body, validationResult } = require('express-validator');
+
+// Validation middleware for tasks
+exports.taskValidation = [
+  body('date').notEmpty().withMessage('Date is required'),
+  body('tasks').isArray({ min: 1 }).withMessage('At least one task is required'),
+  body('duration').matches(/^\d{2}:\d{2}:\d{2}$/).withMessage('Duration must be in HH:MM:SS format'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+  }
+];
 
 exports.getTasks = async (req, res) => {
   try {
@@ -79,7 +94,6 @@ exports.getMonthlyStats = async (req, res) => {
         });
       }
     }
-fix
     res.json(monthlyData);
   } catch (error) {
     console.error('Error getting monthly stats:', error);
