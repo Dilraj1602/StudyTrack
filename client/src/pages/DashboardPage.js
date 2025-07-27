@@ -70,6 +70,8 @@ const DashboardPage = () => {
   const [editForm, setEditForm] = useState({ tasks: '', duration: '' });
   const [addForm, setAddForm] = useState({ tasks: '', duration: '', date: '' });
   const [showDatePicker, setShowDatePicker] = useReactState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 7;
   // Remove useRef and any focus logic
 
   const today = new Date();
@@ -132,6 +134,11 @@ const DashboardPage = () => {
     return arr;
   }, [tasks, filter, search, sort, today]);
 
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, search, sort]);
+
   const groupedByDate = useMemo(() => {
     // If sorting by date, group by date and sort groups by date
     if (sort === 'date_asc' || sort === 'date_desc') {
@@ -169,6 +176,26 @@ const DashboardPage = () => {
       return byDate;
     }
   }, [filteredTasks, sort]);
+
+  // Pagination logic
+  const allTasks = groupedByDate.flatMap(([date, logs]) => 
+    logs.map(task => ({ ...task, date }))
+  );
+  
+  const totalPages = Math.ceil(allTasks.length / tasksPerPage);
+  const startIndex = (currentPage - 1) * tasksPerPage;
+  const endIndex = startIndex + tasksPerPage;
+  const currentTasks = allTasks.slice(startIndex, endIndex);
+
+  // Group current page tasks by date
+  const currentPageGrouped = useMemo(() => {
+    const byDate = {};
+    currentTasks.forEach(task => {
+      if (!byDate[task.date]) byDate[task.date] = [];
+      byDate[task.date].push(task);
+    });
+    return Object.entries(byDate);
+  }, [currentTasks]);
 
   const totalDuration = sumDurations(filteredTasks.map(t => t.duration));
   const uniqueDays = new Set(filteredTasks.map(t => t.date)).size || 1;
@@ -233,6 +260,10 @@ const DashboardPage = () => {
     } catch (err) {
       toast.error('Failed to delete log');
     }
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -328,11 +359,14 @@ const DashboardPage = () => {
 
         {/* Logs */}
         <div style={formCardStyle}>
-          <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '1rem' }}>
-            Logs {filter !== 'All' && `(${filter})`}
+          <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span>Logs {filter !== 'All' && `(${filter})`}</span>
+            <span style={{ fontSize: '0.9rem', color: '#666', fontWeight: 500 }}>
+              Showing {startIndex + 1}-{Math.min(endIndex, allTasks.length)} of {allTasks.length} tasks
+            </span>
           </div>
-          {groupedByDate.length === 0 && <div style={{ color: '#888' }}>No logs available.</div>}
-          {groupedByDate.map(([date, logs]) => (
+          {currentPageGrouped.length === 0 && <div style={{ color: '#888' }}>No logs available.</div>}
+          {currentPageGrouped.map(([date, logs]) => (
             <div key={date} style={{ marginBottom: '2rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '1rem' }}>
               <div style={{ fontWeight: 600, color: '#2563eb', fontSize: '1.08rem', marginBottom: 6 }}>
                 {formatDate(date)}
@@ -376,6 +410,59 @@ const DashboardPage = () => {
               ))}
             </div>
           ))}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              gap: '1rem', 
+              marginTop: '2rem',
+              paddingTop: '1rem',
+              borderTop: '1px solid #e5e7eb'
+            }}>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                style={{
+                  ...buttonStyle,
+                  background: currentPage === 1 ? '#e5e7eb' : '#2563eb',
+                  color: currentPage === 1 ? '#999' : '#fff',
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                  padding: '0.5rem 1rem'
+                }}
+              >
+                Previous
+              </button>
+              
+              <div style={{ 
+                fontSize: '1rem', 
+                fontWeight: 600, 
+                color: '#2563eb',
+                padding: '0.5rem 1rem',
+                background: '#f8f9fa',
+                borderRadius: '6px',
+                border: '1px solid #e5e7eb'
+              }}>
+                {currentPage} / {totalPages}
+              </div>
+              
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                style={{
+                  ...buttonStyle,
+                  background: currentPage === totalPages ? '#e5e7eb' : '#2563eb',
+                  color: currentPage === totalPages ? '#999' : '#fff',
+                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                  padding: '0.5rem 1rem'
+                }}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
