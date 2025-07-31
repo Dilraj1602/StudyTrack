@@ -6,7 +6,6 @@ const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/
 
 exports.chatWithBot = async (req, res) => {
   try {
-    // Dynamically import node-fetch for ESM compatibility
     const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
     const { message, frontendData } = req.body;

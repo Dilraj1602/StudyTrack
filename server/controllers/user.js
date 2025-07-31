@@ -13,9 +13,8 @@ try {
   console.error('Redis not available, disabling cache:', e);
   REDIS_ENABLED = false;
 }
-const CACHE_TTL = 5 * 60; // 5 minutes in seconds
+const CACHE_TTL = 5 * 60; 
 
-// Add this utility for safe Redis operations
 async function safeRedisDel(key) {
   if (!REDIS_ENABLED) return;
   try { await redisClient.del(key); } catch (e) { console.error('Redis DEL error:', e); }
@@ -32,14 +31,13 @@ async function safeRedisSetEx(key, ttl, value) {
 exports.getProfile = async (req, res) => {
   try {
     const userId = req.user;
-    // Try to get from Redis cache
     const cached = await safeRedisGet(`user:${userId}`);
     if (cached) {
       return res.json(JSON.parse(cached));
     }
     const user = await User.findById(userId).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
-    // Store in Redis cache
+
     await safeRedisSetEx(`user:${userId}`, CACHE_TTL, JSON.stringify(user));
     res.json(user);
   } catch (err) {

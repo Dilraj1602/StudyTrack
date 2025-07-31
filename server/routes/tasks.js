@@ -6,7 +6,6 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// Place leaderboard route at the top to avoid conflict with parameterized routes
 router.get('/leaderboard', getLeaderboard);
 
 router.get('/', auth, getTasks);

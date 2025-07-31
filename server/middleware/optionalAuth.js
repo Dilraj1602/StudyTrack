@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded.id;
   } catch (err) {
-    req.user = null; // treat as guest if token is invalid
+    req.user = null; 
   }
   next();
 }; 

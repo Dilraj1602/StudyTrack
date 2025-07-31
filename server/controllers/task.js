@@ -2,7 +2,6 @@ const Task = require('../models/Task');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 
-// Validation middleware for tasks
 exports.taskValidation = [
   body('date').notEmpty().withMessage('Date is required'),
   body('tasks').isArray({ min: 1 }).withMessage('At least one task is required'),
@@ -38,17 +37,16 @@ exports.getMonthlyStats = async (req, res) => {
       return res.status(400).json({ message: 'Valid year required (YYYY format)' });
     }
 
-    // Aggregate data by month for the specified year
     const monthlyStats = await Task.aggregate([
       {
         $match: {
           user: req.user,
-          date: { $regex: `^${year}-` } // Match dates starting with the year
+          date: { $regex: `^${year}-` } 
         }
       },
       {
         $addFields: {
-          month: { $substr: ['$date', 5, 2] } // Extract month (MM) from YYYY-MM-DD
+          month: { $substr: ['$date', 5, 2] } 
         }
       },
       {

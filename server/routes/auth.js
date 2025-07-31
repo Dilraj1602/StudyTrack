@@ -6,9 +6,8 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// Rate limiter: 5 requests per minute per IP
 const authLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
+  windowMs: 60 * 1000, 
   max: 5,
   message: { message: 'Too many requests, please try again later.' }
 });
