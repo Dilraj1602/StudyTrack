@@ -22,7 +22,8 @@ exports.register = async (req, res) => {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      secure: process.env.NODE_ENV === 'production' ? true : false,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
     };
     res.cookie('token', token, cookieOptions);
     res.json({ user: { id: user._id, username, email: user.email }, token });
@@ -45,7 +46,8 @@ exports.login = async (req, res) => {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      secure: process.env.NODE_ENV === 'production' ? true : false,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
     };
     res.cookie('token', token, cookieOptions);
     res.json({ user: { id: user._id, username, email: user.email }, token });
@@ -55,26 +57,54 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie('token');
+  const cookieOptions = {
+    httpOnly: true,
+    path: '/',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  };
+  res.clearCookie('token', cookieOptions);
   res.json({ message: 'Logged out' });
 };
 
 exports.getCurrentUser = async (req, res) => {
   try {
-    const token = req.cookies.token;
-    if (!token) return res.json({ loggedIn: false });
+    let token = req.cookies.token;
+    console.log('getCurrentUser - Cookie token:', !!token);
+    console.log('getCurrentUser - Authorization header:', req.headers.authorization);
+    
+    // Check Authorization header if no cookie
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+      console.log('getCurrentUser - Using Bearer token:', !!token);
+    }
+    
+    if (!token) {
+      console.log('getCurrentUser - No token found');
+      return res.json({ loggedIn: false });
+    }
+    
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log('getCurrentUser - Token decoded successfully, user ID:', decoded.id);
     } catch (err) {
+      console.log('Token verification failed in getCurrentUser:', err.message);
       return res.json({ loggedIn: false });
     }
+    
     const user = await User.findById(decoded.id);
-    if (!user) return res.json({ loggedIn: false });
+    console.log('getCurrentUser - User found:', !!user);
+    if (!user) {
+      return res.json({ loggedIn: false });
+    }
+    
     // Construct username from firstName and lastName
     const username = `${user.firstName} ${user.lastName}`;
+    console.log('getCurrentUser - Authentication successful for:', username);
     res.json({ loggedIn: true, user: { id: user._id, username, email: user.email } });
   } catch (err) {
+    console.log('getCurrentUser error:', err.message);
     res.status(500).json({ loggedIn: false });
   }
 }; 

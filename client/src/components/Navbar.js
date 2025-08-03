@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
 
 const LogoutIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 6, verticalAlign: 'middle' }}>
@@ -20,7 +20,14 @@ const Navbar = () => {
 
   const checkLogin = async () => {
     try {
-      const res = await axios.get(`${API_URL}/auth/current-user`, { withCredentials: true });
+      const token = localStorage.getItem('token');
+      const config = { withCredentials: true };
+      
+      if (token) {
+        config.headers = { Authorization: `Bearer ${token}` };
+      }
+      
+      const res = await axios.get(`${API_URL}/auth/current-user`, config);
       setIsLoggedIn(res.data.loggedIn);
     } catch {
       setIsLoggedIn(false);
@@ -33,7 +40,15 @@ const Navbar = () => {
   }, [location.pathname]);
 
   const handleSignOut = async () => {
-    await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+    const token = localStorage.getItem('token');
+    const config = { withCredentials: true };
+    
+    if (token) {
+      config.headers = { Authorization: `Bearer ${token}` };
+    }
+    
+    await axios.post(`${API_URL}/auth/logout`, {}, config);
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
     // Dispatch custom event for chat widget
     window.dispatchEvent(new Event('user-logged-out'));

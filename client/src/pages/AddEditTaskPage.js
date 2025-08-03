@@ -8,6 +8,7 @@ const AddEditTaskPage = () => {
     description: '',
     duration: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,6 +16,7 @@ const AddEditTaskPage = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setLoading(true);
     try {
       const payload = {
         date: form.date,
@@ -26,6 +28,8 @@ const AddEditTaskPage = () => {
       setForm({ date: '', description: '', duration: '' });
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to add task');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,8 +79,9 @@ const AddEditTaskPage = () => {
         <button
           type="submit"
           className="submit-button"
+          disabled={loading}
         >
-          Add Task
+          {loading ? 'Adding Task...' : 'Add Task'}
         </button>
       </form>
     </div>

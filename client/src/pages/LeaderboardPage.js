@@ -17,7 +17,14 @@ const LeaderboardPage = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/tasks/leaderboard`);
+        const token = localStorage.getItem('token');
+        const config = { withCredentials: true };
+        
+        if (token) {
+          config.headers = { Authorization: `Bearer ${token}` };
+        }
+        
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/tasks/leaderboard`, config);
         setLeaderboard(res.data);
       } catch (err) {
         setError('Failed to load leaderboard');

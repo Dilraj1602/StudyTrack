@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import './ChatWidget.css';
 
 const ChatWidget = ({ frontendData }) => {
@@ -33,14 +34,18 @@ const ChatWidget = ({ frontendData }) => {
     setLoading(true);
     try {
       const API_URL = process.env.REACT_APP_API_URL || '';
-      const res = await fetch(`${API_URL}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ message: input, frontendData }),
-      });
-      const data = await res.json();
-      setMessages((msgs) => [...msgs, { sender: 'bot', text: data.response || 'Sorry, I could not get a response.' }]);
+      const token = localStorage.getItem('token');
+      const config = { 
+        withCredentials: true,
+        headers: { 'Content-Type': 'application/json' }
+      };
+      
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      
+      const res = await axios.post(`${API_URL}/chat`, { message: input, frontendData }, config);
+      setMessages((msgs) => [...msgs, { sender: 'bot', text: res.data.response || 'Sorry, I could not get a response.' }]);
     } catch (err) {
       setMessages((msgs) => [...msgs, { sender: 'bot', text: 'Error contacting the chatbot.' }]);
     }

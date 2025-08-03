@@ -22,9 +22,21 @@ function PrivateRoute({ children }) {
     async function checkAuth() {
       try {
         const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
-        const res = await axios.get(`${API_URL}/auth/current-user`, { withCredentials: true });
+        const token = localStorage.getItem('token');
+        console.log('PrivateRoute - Token found:', !!token);
+        console.log(token);
+        const config = { withCredentials: true };
+        
+        if (token) {
+          config.headers = { Authorization: `Bearer ${token}` };
+        }
+        
+        const res = await axios.get(`${API_URL}/auth/current-user`, config);
+        console.log('PrivateRoute - Auth response:', res.data);
+        console.log('PrivateRoute - Full response:', res);
         setIsAuthenticated(res.data.loggedIn);
-      } catch {
+      } catch (err) {
+        console.error('PrivateRoute - Auth error:', err);
         setIsAuthenticated(false);
       } finally {
         setAuthChecked(true);
@@ -48,7 +60,14 @@ function App() {
     async function checkLogin() {
       try {
         const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
-        const res = await axios.get(`${API_URL}/auth/current-user`, { withCredentials: true });
+        const token = localStorage.getItem('token');
+        const config = { withCredentials: true };
+        
+        if (token) {
+          config.headers = { Authorization: `Bearer ${token}` };
+        }
+        
+        const res = await axios.get(`${API_URL}/auth/current-user`, config);
         setIsLoggedIn(res.data.loggedIn);
       } catch {
         setIsLoggedIn(false);
