@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { isLoggedIn } from '../utils/data';
 
 const steps = [
@@ -20,7 +21,10 @@ const steps = [
   }
 ];
 
-const DemoPage = () => (
+const DemoPage = () => {
+  const navigate = useNavigate();
+  
+  return (
   <div style={{ minHeight: '100vh', background: '#f6f8fa', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', padding: '3rem 1rem' }}>
     <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: '#2563eb', marginBottom: 12 }}>How StudyTrack Works</h1>
     <p style={{ color: '#333', fontSize: '1.15rem', marginBottom: 40, textAlign: 'center', maxWidth: 540 }}>
@@ -47,13 +51,20 @@ const DemoPage = () => (
     </div>
     <button
       onClick={() => {
-        window.location.href = '/dashboard';
+        // Check if user is logged in
+        const token = localStorage.getItem('token');
+        if (token) {
+          navigate('/dashboard');
+        } else {
+          navigate('/login');
+        }
       }}
       style={{ marginTop: 40, padding: '0.9rem 2.5rem', fontSize: '1.1rem', borderRadius: 8, border: 'none', background: '#2563eb', color: '#fff', fontWeight: 700, cursor: 'pointer', letterSpacing: '0.5px', boxShadow: '0 2px 12px rgba(37,99,235,0.10)' }}
     >
       Get Started
     </button>
   </div>
-);
+  );
+};
 
 export default DemoPage; 

@@ -72,8 +72,13 @@ const LandingPage = () => {
           <div style={{ display: 'flex', gap: 16, marginBottom: 24, justifyContent: 'center' }}>
             <button onClick={() => navigate('/demo')} style={{ padding: '0.7rem 2.2rem', fontSize: '1rem', borderRadius: 7, border: 'none', background: '#2563eb', color: '#fff', fontWeight: 600, cursor: 'pointer' }}>Watch Demo</button>
             <button onClick={() => {
-              // Placeholder: verify user, then navigate to dashboard
-              window.location.href = '/dashboard';
+              // Check if user is logged in
+              const token = localStorage.getItem('token');
+              if (token) {
+                navigate('/dashboard');
+              } else {
+                navigate('/login');
+              }
             }} style={{ padding: '0.7rem 2.2rem', fontSize: '1rem', borderRadius: 7, border: 'none', background: '#e0e7ff', color: '#2563eb', fontWeight: 600, cursor: 'pointer' }}>Get Started</button>
           </div>
         </motion.div>
