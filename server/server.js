@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   'http://localhost:3000',               
-  'https://studytrack-1a.onrender.com',  
+  'https://studytrack-r4uo.onrender.com',  
   'https://studytrack-5s52.onrender.com' 
 ];
 
