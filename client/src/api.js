@@ -18,6 +18,12 @@ export const login = (data) => API.post('/auth/login', data);
 export const logout = () => API.post('/auth/logout');
 export const getCurrentUser = () => API.get('/auth/current-user');
 
+// Password management
+export const changePassword = (data) => API.post('/auth/change-password', data);
+export const forgotPassword = (data) => API.post('/auth/forgot-password', data);
+export const verifyOtp = (data) => API.post('/auth/verify-otp', data);
+export const verifyResetCode = (data) => API.post('/auth/verify-reset-code', data);
+
 export const getTasks = () => API.get('/tasks');
 export const getMonthlyStats = (year) => API.get(`/tasks/monthly-stats/${year}`);
 export const createTask = (data) => API.post('/tasks', data);

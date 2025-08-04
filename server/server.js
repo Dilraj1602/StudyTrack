@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   'http://localhost:3000',               
-  'https://studytrack-1a.onrender.com',  
+  'https://studytrack-r4uo.onrender.com',  
   'https://studytrack-5s52.onrender.com' 
 ];
 
@@ -37,6 +37,15 @@ apiRouter.use('/auth', authRoutes);
 apiRouter.use('/tasks', taskRoutes);
 apiRouter.use('/chat', chatRoutes);
 app.use('/api/v1', apiRouter);
+
+// Debug route to test if server is working
+app.get('/test', (req, res) => {
+  res.json({ message: 'Server is running!' });
+});
+
+// console.log('Available routes:');
+// console.log('- POST /api/v1/auth/change-password');
+// console.log('- GET /test');
 
 connectDB().then(() => {
   app.listen(process.env.PORT || 4000, () => {

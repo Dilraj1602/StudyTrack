@@ -6,8 +6,6 @@ A full-stack web application to help you track your study sessions, coding pract
 - User authentication (register, login, logout)
 - Add, edit, and delete daily study logs
 - Track tasks with descriptions and durations
-- Dashboard with filtering, searching, and statistics
-- Data persistence with MongoDB
 - Responsive and modern UI
 
 ## Tech Stack
@@ -32,9 +30,6 @@ A full-stack web application to help you track your study sessions, coding pract
 
 2. **Install server dependencies:**
    ```sh
-   cd server
-   npm install
-   # or
    yarn install
    ```
 

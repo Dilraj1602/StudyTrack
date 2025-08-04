@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "react-hot-toast": "^2.5.2"
+    "react-hot-toast": "^2.5.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "concurrently": "^9.2.0"

@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import AddEditTaskPage from './pages/AddEditTaskPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -23,8 +24,7 @@ function PrivateRoute({ children }) {
       try {
         const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/v1';
         const token = localStorage.getItem('token');
-        console.log('PrivateRoute - Token found:', !!token);
-        console.log(token);
+        // console.log('PrivateRoute - Token found:', !!token);
         const config = { withCredentials: true };
         
         if (token) {
@@ -32,8 +32,7 @@ function PrivateRoute({ children }) {
         }
         
         const res = await axios.get(`${API_URL}/auth/current-user`, config);
-        console.log('PrivateRoute - Auth response:', res.data);
-        console.log('PrivateRoute - Full response:', res);
+        // console.log('PrivateRoute - Auth response:', res.data);
         setIsAuthenticated(res.data.loggedIn);
       } catch (err) {
         console.error('PrivateRoute - Auth error:', err);
@@ -85,10 +84,13 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
           <Route path="/add-task" element={<AddEditTaskPage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/demo" element={<DemoPage />} />
+          {/* Redirect incorrect dashboard/login to login */}
+          <Route path="/dashboard/login" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <ChatWidget />

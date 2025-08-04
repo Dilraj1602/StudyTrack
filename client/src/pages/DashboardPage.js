@@ -393,7 +393,7 @@ const DashboardPage = () => {
                   ) : (
                     <>
                       {(task.tasks || []).map((desc, i) => (
-                        <div key={i} style={{ fontSize: '1.05rem', color: '#333', marginBottom: 2 }}>
+                        <div key={`${task._id}-${i}`} style={{ fontSize: '1.05rem', color: '#333', marginBottom: 2 }}>
                           {desc}
                         </div>
                       ))}

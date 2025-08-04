@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, logout, getCurrentUser } = require('../controllers/auth');
+const { register, login, logout, getCurrentUser, changePassword, forgotPassword, verifyOtp, verifyResetCode } = require('../controllers/auth');
 const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
@@ -43,6 +43,55 @@ router.post('/register', authLimiter, registerValidation, register);
 router.post('/login', authLimiter, loginValidation, login);
 router.post('/logout', logout);
 router.get('/current-user', getCurrentUser);
+
+// Password management routes
+router.post('/change-password', auth, [
+  body('currentPassword').notEmpty().withMessage('Current password is required'),
+  body('newPassword').isLength({ min: 4 }).withMessage('New password must be at least 4 characters'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+  }
+], changePassword);
+
+router.post('/forgot-password', authLimiter, [
+  body('email').isEmail().withMessage('Valid email is required'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+  }
+], forgotPassword);
+
+router.post('/verify-otp', authLimiter, [
+  body('email').isEmail().withMessage('Valid email is required'),
+  body('code').notEmpty().withMessage('Verification code is required'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+  }
+], verifyOtp);
+
+router.post('/verify-reset-code', authLimiter, [
+  body('email').isEmail().withMessage('Valid email is required'),
+  body('code').notEmpty().withMessage('Verification code is required'),
+  body('newPassword').isLength({ min: 4 }).withMessage('New password must be at least 4 characters'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+  }
+], verifyResetCode);
 
 // Add update profile route
 router.put('/update-profile', auth, [

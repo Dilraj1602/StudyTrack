@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   token: { type: String }, 
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
+  resetPasswordCode: { type: String },
+  resetPasswordExpires: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 

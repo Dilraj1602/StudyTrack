@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
+import { getCurrentUser, logout } from '../api';
+import ProfileDropdown from './ProfileDropdown';
 
 const LogoutIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: 6, verticalAlign: 'middle' }}>
@@ -17,20 +16,20 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
   const checkLogin = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const config = { withCredentials: true };
-      
-      if (token) {
-        config.headers = { Authorization: `Bearer ${token}` };
-      }
-      
-      const res = await axios.get(`${API_URL}/auth/current-user`, config);
+      const res = await getCurrentUser();
       setIsLoggedIn(res.data.loggedIn);
+      if (res.data.loggedIn && res.data.user) {
+        setUser(res.data.user);
+      } else {
+        setUser(null);
+      }
     } catch {
       setIsLoggedIn(false);
+      setUser(null);
     }
   };
 
@@ -40,16 +39,10 @@ const Navbar = () => {
   }, [location.pathname]);
 
   const handleSignOut = async () => {
-    const token = localStorage.getItem('token');
-    const config = { withCredentials: true };
-    
-    if (token) {
-      config.headers = { Authorization: `Bearer ${token}` };
-    }
-    
-    await axios.post(`${API_URL}/auth/logout`, {}, config);
+    await logout();
     localStorage.removeItem('token');
     setIsLoggedIn(false);
+    setUser(null);
     // Dispatch custom event for chat widget
     window.dispatchEvent(new Event('user-logged-out'));
     navigate('/');
@@ -145,21 +138,14 @@ const Navbar = () => {
               <Link to="/login" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', border: '1.5px solid #2563eb', borderRadius: 8, padding: '0.4rem 1.1rem', marginLeft: 8 }}>Login / Sign Up</Link>
             </>
           )}
-          {/* Logged in, not dashboard: Dashboard and Logout */}
+          {/* Logged in: Dashboard, Leaderboard, and Profile */}
           {isLoggedIn && (
             <>
               {!isDashboard && (
                 <Link to="/dashboard" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', border: '1.5px solid #2563eb', borderRadius: 8, padding: '0.4rem 1.1rem' }}>Dashboard</Link>
               )}
               <Link to="/leaderboard" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none', transition: 'color 0.2s', border: '1.5px solid #2563eb', borderRadius: 8, padding: '0.4rem 1.1rem' }}>Leaderboard</Link>
-              <button
-                onClick={handleSignOut}
-                style={hover ? { ...logoutBtnStyle, ...logoutBtnHover } : logoutBtnStyle}
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)}
-              >
-                <LogoutIcon /> Logout
-              </button>
+              <ProfileDropdown user={user} onLogout={handleSignOut} />
             </>
           )}
         </div>
