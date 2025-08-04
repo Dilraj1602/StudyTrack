@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { forgotPassword, verifyOtp, verifyResetCode } from '../api';
-import './css/login.css';
+import './css/reset-password.css';
 
 const ResetPasswordPage = () => {
   // Step states
@@ -126,6 +126,34 @@ const ResetPasswordPage = () => {
     }
   };
 
+  // Step indicator component
+  const StepIndicator = () => (
+    <div className="step-indicator">
+      <div className={`step ${currentStep >= 1 ? 'active' : 'inactive'}`}>
+        <div className="step-number">1</div>
+        <span>Email</span>
+      </div>
+      <div className={`step ${currentStep >= 2 ? (currentStep > 2 ? 'completed' : 'active') : 'inactive'}`}>
+        <div className="step-number">{currentStep > 2 ? '✓' : '2'}</div>
+        <span>Verify</span>
+      </div>
+      <div className={`step ${currentStep >= 3 ? 'active' : 'inactive'}`}>
+        <div className="step-number">3</div>
+        <span>Reset</span>
+      </div>
+    </div>
+  );
+
+  // Message component
+  const Message = ({ type = 'info', children }) => (
+    <div className={`message ${type}`}>
+      {type === 'success' && '✅'}
+      {type === 'error' && '❌'}
+      {type === 'info' && 'ℹ️'}
+      {children}
+    </div>
+  );
+
   // Render Step 1: Email Input
   const renderEmailStep = () => (
     <form onSubmit={handleEmailSubmit}>
@@ -143,34 +171,22 @@ const ResetPasswordPage = () => {
       </div>
       
       {message && (
-        <div style={{
-          padding: '12px',
-          marginBottom: '16px',
-          borderRadius: '8px',
-          fontSize: '14px',
-          backgroundColor: message.includes('sent') ? '#d1fae5' : '#fee2e2',
-          color: message.includes('sent') ? '#065f46' : '#dc2626',
-          border: `1px solid ${message.includes('sent') ? '#a7f3d0' : '#fecaca'}`
-        }}>
+        <Message type={message.includes('sent') ? 'success' : 'error'}>
           {message}
-        </div>
+        </Message>
       )}
       
       <button
         type="submit"
-        className="login-button"
+        className="reset-button"
         disabled={loading}
       >
         {loading ? 'Sending...' : 'Send Verification Code'}
       </button>
       
       <div className="link-container">
-        <Link
-          to="/login"
-          className="link-text"
-          style={{ textDecoration: 'none' }}
-        >
-          Back to Login
+        <Link to="/login" className="link-text">
+          ← Back to Login
         </Link>
       </div>
     </form>
@@ -179,21 +195,12 @@ const ResetPasswordPage = () => {
   // Render Step 2: OTP Verification
   const renderOtpStep = () => (
     <div>
-      <div style={{
-        padding: '20px',
-        marginBottom: '24px',
-        borderRadius: '12px',
-        backgroundColor: '#d1fae5',
-        border: '1px solid #a7f3d0',
-        textAlign: 'center'
-      }}>
-        <div style={{ fontSize: '48px', marginBottom: '16px' }}>📧</div>
-        <h3 style={{ color: '#065f46', margin: '0 0 8px 0', fontSize: '18px' }}>
-          Check Your Email
-        </h3>
-        <p style={{ color: '#065f46', margin: '0', fontSize: '14px', lineHeight: '1.5' }}>
+      <div className="email-info-box">
+        <span className="email-icon">📧</span>
+        <h3 className="email-title">Check Your Email</h3>
+        <p className="email-subtitle">
           We've sent a verification code to<br />
-          <strong>{email}</strong>
+          <span className="email-address">{email}</span>
         </p>
       </div>
 
@@ -205,34 +212,26 @@ const ResetPasswordPage = () => {
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
             required
-            className="form-input"
-            placeholder="Enter 6-digit code"
+            className="form-input otp-input"
+            placeholder="000000"
             maxLength="6"
             pattern="[0-9]{6}"
             title="Please enter a 6-digit verification code"
           />
-          <small style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+          <span className="otp-hint">
             Enter the 6-digit code sent to {email}
-          </small>
+          </span>
         </div>
         
         {message && (
-          <div style={{
-            padding: '12px',
-            marginBottom: '16px',
-            borderRadius: '8px',
-            fontSize: '14px',
-            backgroundColor: message.includes('successful') ? '#d1fae5' : '#fee2e2',
-            color: message.includes('successful') ? '#065f46' : '#dc2626',
-            border: `1px solid ${message.includes('successful') ? '#a7f3d0' : '#fecaca'}`
-          }}>
+          <Message type={message.includes('successful') ? 'success' : 'error'}>
             {message}
-          </div>
+          </Message>
         )}
         
         <button
           type="submit"
-          className="login-button"
+          className="reset-button"
           disabled={loading}
         >
           {loading ? 'Verifying...' : 'Verify Code'}
@@ -245,16 +244,11 @@ const ResetPasswordPage = () => {
               setMessage('');
               setOtp('');
             }}
-            className="link-text"
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            className="back-button"
           >
-            Use Different Email
+            ← Use Different Email
           </button>
-          <Link
-            to="/login"
-            className="link-text"
-            style={{ textDecoration: 'none' }}
-          >
+          <Link to="/login" className="link-text">
             Back to Login
           </Link>
         </div>
@@ -274,7 +268,7 @@ const ResetPasswordPage = () => {
             onChange={(e) => setNewPassword(e.target.value)}
             required
             className="form-input"
-            placeholder="Enter new password"
+            placeholder="Enter new password (min 4 characters)"
             minLength="4"
           />
           <span
@@ -310,22 +304,14 @@ const ResetPasswordPage = () => {
       </div>
       
       {message && (
-        <div style={{
-          padding: '12px',
-          marginBottom: '16px',
-          borderRadius: '8px',
-          fontSize: '14px',
-          backgroundColor: message.includes('successfully') ? '#d1fae5' : '#fee2e2',
-          color: message.includes('successfully') ? '#065f46' : '#dc2626',
-          border: `1px solid ${message.includes('successfully') ? '#a7f3d0' : '#fecaca'}`
-        }}>
+        <Message type={message.includes('successfully') ? 'success' : 'error'}>
           {message}
-        </div>
+        </Message>
       )}
       
       <button
         type="submit"
-        className="login-button"
+        className="reset-button"
         disabled={loading}
       >
         {loading ? 'Resetting...' : 'Reset Password'}
@@ -339,16 +325,11 @@ const ResetPasswordPage = () => {
             setNewPassword('');
             setConfirmPassword('');
           }}
-          className="link-text"
-          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+          className="back-button"
         >
-          Back to Verification
+          ← Back to Verification
         </button>
-        <Link
-          to="/login"
-          className="link-text"
-          style={{ textDecoration: 'none' }}
-        >
+        <Link to="/login" className="link-text">
           Back to Login
         </Link>
       </div>
@@ -356,16 +337,18 @@ const ResetPasswordPage = () => {
   );
 
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <div className="login-title">
+    <div className="reset-password-container">
+      <div className="reset-password-form">
+        <div className="reset-password-title">
           Reset your<br />password
         </div>
-        <h2 className="login-heading">
-          {currentStep === 1 && 'Forgot Password'}
-          {currentStep === 2 && 'Verify Code'}
-          {currentStep === 3 && 'Reset Password'}
+        <h2 className="reset-password-heading">
+          {currentStep === 1 && 'Enter your email address'}
+          {currentStep === 2 && 'Verify your email'}
+          {currentStep === 3 && 'Create new password'}
         </h2>
+        
+        <StepIndicator />
         
         {currentStep === 1 && renderEmailStep()}
         {currentStep === 2 && renderOtpStep()}
