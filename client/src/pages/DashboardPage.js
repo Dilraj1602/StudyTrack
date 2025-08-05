@@ -329,7 +329,7 @@ const DashboardPage = () => {
 
         {/* Add Form */}
         <form onSubmit={handleAddSubmit} className="add-form">
-          <div className="add-form-header">Add New Task</div>
+          <div className="add-form-title">Add New Task</div>
           <input
             type="date"
             value={addForm.date}

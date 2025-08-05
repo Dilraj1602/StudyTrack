@@ -95,7 +95,7 @@
   border-radius: 6px;
   padding: 6px 10px;
 
-  font-size: 20px;
+  font-size: 18px;
   font-family: inherit;
   color: #111827;
 
@@ -109,8 +109,6 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
-
-
 .add-form {
   background: #fff;
   border-radius: 10px;
@@ -119,7 +117,7 @@
   border: 1px solid #e5e7eb;
   margin-bottom: 2rem;
 }
-.add-form-header {
+.add-form-title {
   font-size: 1.25rem;  
   font-weight: 600;    
   color: #2563eb;   
