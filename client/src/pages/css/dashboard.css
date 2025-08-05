@@ -83,6 +83,34 @@
   color: #2563eb;
   outline: none;
 }
+
+.custom-date-input {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  z-index: 1000;
+
+  background-color: #ffffff;
+  border: 1px solid #d1d5db; 
+  border-radius: 6px;
+  padding: 6px 10px;
+
+  font-size: 20px;
+  font-family: inherit;
+  color: #111827;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-date-input:focus {
+  border-color: #3b82f6; 
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+
+
 .add-form {
   background: #fff;
   border-radius: 10px;
@@ -92,8 +120,15 @@
   margin-bottom: 2rem;
 }
 .add-form-header {
-  margin-bottom: 8px;
+  font-size: 1.25rem;  
+  font-weight: 600;    
+  color: #2563eb;   
+  margin-bottom: 12px;  
+  padding-bottom: 4px;
+  border-bottom: 2px solid #e5e7eb; 
+  letter-spacing: 0.5px;   
 }
+
 .add-form-textarea {
   width: 100%;
   padding: 0.5rem;
@@ -111,23 +146,28 @@
 }
 .add-form-input {
   padding: 0.5rem 1rem;
-  border-radius: 7px;
-  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  border: 1px solid #d1d5db; /* subtle gray */
   font-size: 1rem;
-  min-width: 180px;
+  min-width: 200px;
   outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #f9fafb; /* soft light background */
 }
+
 .add-form-input[type="date"] {
   margin-bottom: 12px;
-  padding: 0.5rem 1rem;
-  border-radius: 7px;
-  border: 1px solid #e5e7eb;
-  font-size: 1rem;
-  min-width: 180px;
-  outline: none;
-  background: #fff;
-  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #111827; /* dark text for accessibility */
+  cursor: pointer;
 }
+
+.add-form-input:focus {
+  border-color: #2563eb; /* Tailwind blue-600 */
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3); /* subtle blue ring */
+  background-color: #fff;
+}
+
 .add-form-button {
   background: #2563eb;
   color: #fff;
@@ -138,6 +178,15 @@
   cursor: pointer;
   font-size: 1rem;
 }
+
+.logs-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #232423; 
+  letter-spacing: 0.5px;
+}
+
+
 .logs-container {
   background: #fff;
   border-radius: 10px;

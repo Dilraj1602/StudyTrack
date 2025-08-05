@@ -301,23 +301,22 @@ const DashboardPage = () => {
             <CalendarIcon onClick={() => setShowDatePicker(true)} />
             {showDatePicker && (
               <input
-                type="date"
-                onChange={e => {
-                  if (e.target.value) {
-                    const d = new Date(e.target.value);
-                    const yy = String(d.getFullYear()).slice(2);
-                    const mm = String(d.getMonth() + 1).padStart(2, '0');
-                    const dd = String(d.getDate()).padStart(2, '0');
-                    setSearch(`${dd}-${mm}-${yy}`);
-                    setShowDatePicker(false);
-                  }
-                }}
-                style={{
-                  position: 'absolute', right: 0, top: '110%', zIndex: 1000, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 6, padding: 4, boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-                }}
-                onBlur={() => setShowDatePicker(false)}
-                autoFocus
-              />
+              type="date"
+              onChange={e => {
+                if (e.target.value) {
+                  const d = new Date(e.target.value);
+                  const yy = String(d.getFullYear()).slice(2);
+                  const mm = String(d.getMonth() + 1).padStart(2, '0');
+                  const dd = String(d.getDate()).padStart(2, '0');
+                  setSearch(`${dd}-${mm}-${yy}`);
+                  setShowDatePicker(false);
+                }
+              }}
+              className="custom-date-input"
+              onBlur={() => setShowDatePicker(false)}
+              autoFocus
+            />
+            
             )}
           </div>
           <select value={filter} onChange={e => setFilter(e.target.value)} style={selectStyle}>
@@ -330,7 +329,7 @@ const DashboardPage = () => {
 
         {/* Add Form */}
         <form onSubmit={handleAddSubmit} className="add-form">
-          <div className="add-form-header">Add New Log</div>
+          <div className="add-form-header">Add New Task</div>
           <input
             type="date"
             value={addForm.date}
@@ -353,14 +352,14 @@ const DashboardPage = () => {
               placeholder="Total Duration (01:30:00)"
               className="add-form-input"
             />
-            <button type="submit" className="add-form-button">Add Log</button>
+            <button type="submit" className="add-form-button">Add Task</button>
           </div>
         </form>
 
         {/* Logs */}
         <div style={formCardStyle}>
           <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>Logs {filter !== 'All' && `(${filter})`}</span>
+            <span className="logs-title" >Tasks {filter !== 'All' && `(${filter})`}</span>
             <span style={{ fontSize: '0.9rem', color: '#666', fontWeight: 500 }}>
               Showing {startIndex + 1}-{Math.min(endIndex, allTasks.length)} of {allTasks.length} tasks
             </span>
