@@ -1,0 +1,191 @@
+.register-page-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+.register-form {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-header {
+  margin-bottom: 0.2rem;
+  color: #1e3a8a;
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 0.5px;
+}
+.form-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0 0 0.2rem 0;
+  color: #222;
+  letter-spacing: 0.2px;
+}
+.name-fields-row, .password-fields-row {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.form-label {
+  font-size: 0.97rem;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-bottom: 2px;
+}
+.required-asterisk {
+  color: #dc2626;
+  font-size: 1.1em;
+  margin-left: 2px;
+}
+.optional-text {
+  color: #888;
+  font-size: 0.95em;
+}
+.form-input {
+  padding: 0.7rem;
+  border: 1px solid #e0e7ef;
+  border-radius: 7px;
+  font-size: 1rem;
+  outline: none;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.form-textarea {
+  padding: 0.7rem;
+  border: 1px solid #e0e7ef;
+  border-radius: 7px;
+  font-size: 1rem;
+  outline: none;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+}
+.password-input-container {
+  position: relative;
+}
+.password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 1.15rem;
+  user-select: none;
+}
+.submit-button {
+  margin-top: 0.5rem;
+  padding: 0.7rem;
+  border-radius: 7px;
+  border: none;
+  background: #222;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+.login-link-container {
+  text-align: center;
+  font-size: 0.97rem;
+  margin-top: 0.2rem;
+}
+.login-link {
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.login-link:hover {
+  color: #1e3a8a;
+}
+
+/* New styles for OTP verification flow */
+.error-message {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 0.75rem;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.secondary-button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 7px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.secondary-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.secondary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-help-text {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.success-text {
+  color: #16a34a !important;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+} 

@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "react-hot-toast": "^2.5.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
+  }
+}

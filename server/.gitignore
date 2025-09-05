@@ -1,0 +1,8 @@
+# Ignore environment variables file
+.env 
+<<<<<<< HEAD
+
+/node_modules
+=======
+/node_modules
+>>>>>>> 2734543f8a67e892b279ecf095f5512466e54f3e

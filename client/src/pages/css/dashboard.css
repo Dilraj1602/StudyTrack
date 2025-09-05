@@ -1,0 +1,307 @@
+/* DashboardPage styles go here. Add your dashboard-specific CSS here. */ .dashboard-page {
+  min-height: 80vh;
+  background: #fff;
+  padding: 2rem 0;
+}
+.dashboard-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+.dashboard-title {
+  font-weight: 800;
+  font-size: 2rem;
+  color: #2563eb;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+.stats-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  padding: 1.1rem;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+  min-width: 180px;
+}
+.stat-card-label {
+  font-weight: 700;
+  color: #222;
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+.stat-card-value {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #2563eb;
+}
+.filter-sort-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.search-and-calendar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-input {
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+  min-width: 180px;
+  outline: none;
+  padding-right: 36px;
+}
+.date-picker-input {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  z-index: 1000;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.filter-select, .sort-select {
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2563eb;
+  outline: none;
+}
+
+.custom-date-input {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  z-index: 1000;
+
+  background-color: #ffffff;
+  border: 1px solid #d1d5db; 
+  border-radius: 6px;
+  padding: 6px 10px;
+
+  font-size: 18px;
+  font-family: inherit;
+  color: #111827;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-date-input:focus {
+  border-color: #3b82f6; 
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.add-form {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 2rem;
+}
+.add-form-title {
+  font-size: 1.25rem;  
+  font-weight: 600;    
+  color: #2563eb;   
+  margin-bottom: 12px;  
+  padding-bottom: 4px;
+  border-bottom: 2px solid #e5e7eb; 
+  letter-spacing: 0.5px;   
+}
+
+.add-form-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  resize: vertical;
+  font-family: inherit;
+}
+.add-form-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.add-form-input {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db; /* subtle gray */
+  font-size: 1rem;
+  min-width: 200px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #f9fafb; /* soft light background */
+}
+
+.add-form-input[type="date"] {
+  margin-bottom: 12px;
+  background-color: #ffffff;
+  color: #111827; /* dark text for accessibility */
+  cursor: pointer;
+}
+
+.add-form-input:focus {
+  border-color: #2563eb; /* Tailwind blue-600 */
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3); /* subtle blue ring */
+  background-color: #fff;
+}
+
+.add-form-button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.logs-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #232423; 
+  letter-spacing: 0.5px;
+}
+
+
+.logs-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 2rem;
+}
+.logs-header {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+.no-logs-message {
+  color: #888;
+}
+.log-group {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+}
+.log-group-header {
+  font-weight: 600;
+  color: #2563eb;
+  font-size: 1.08rem;
+  margin-bottom: 6px;
+}
+.log-item {
+  margin-bottom: 1.2rem;
+}
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.edit-form-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  resize: vertical;
+  font-family: inherit;
+}
+.edit-form-input {
+  padding: 0.5rem 1rem;
+  border-radius: 7px;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+  min-width: 180px;
+  outline: none;
+}
+.edit-form-save-button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-right: 8px;
+}
+.edit-form-cancel-button {
+  background: #e5e7eb;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.log-item-description-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.log-item-description-item {
+  font-size: 1.05rem;
+  color: #333;
+  margin-bottom: 2px;
+}
+.log-item-duration {
+  font-weight: 600;
+  color: #2563eb;
+  margin-top: 8px;
+}
+.log-item-actions {
+  margin-top: 6px;
+}
+.log-item-edit-button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-right: 8px;
+}
+.log-item-delete-button {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+}
+@media (max-width: 900px) {
+  .stats-container {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.2rem 0;
+  }
+}
