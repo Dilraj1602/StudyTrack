@@ -249,7 +249,7 @@ const TrackingPage = () => {
               <p className="stat-value">{totalDuration}</p>
             </div>
             <div className="stat-card">
-              <h4>Last Activity</h4>
+              <h4>Last Activity (MM:DD:YY) </h4>
               <p className="stat-value">{lastTaskDate ? new Date(lastTaskDate).toLocaleDateString() : 'N/A'}</p>
             </div>
           </div>
