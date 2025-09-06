@@ -116,12 +116,12 @@ export const TaskProvider = ({ children }) => {
     return d > latest ? d : latest;
   }, new Date(tasks[0].date)).toISOString().split('T')[0] : null;
 
-  useEffect(() => {
-    console.log('[TaskContext] tasks:', tasks);
-    console.log('[TaskContext] averages:', averages);
-    console.log('[TaskContext] loading:', loading);
-    console.log('[TaskContext] error:', error);
-  }, [tasks, averages, loading, error]);
+  // useEffect(() => {
+  //   console.log('[TaskContext] tasks:', tasks);
+  //   console.log('[TaskContext] averages:', averages);
+  //   console.log('[TaskContext] loading:', loading);
+  //   console.log('[TaskContext] error:', error);
+  // }, [tasks, averages, loading, error]);
 
   return (
     <TaskContext.Provider value={{
