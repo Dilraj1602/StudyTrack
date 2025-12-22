@@ -71,6 +71,8 @@ const DashboardPage = () => {
   const [addForm, setAddForm] = useState({ tasks: '', duration: '', date: '' });
   const [showDatePicker, setShowDatePicker] = useReactState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState(String(new Date().getFullYear()));
   const tasksPerPage = 7;
   // Remove useRef and any focus logic
 
@@ -92,6 +94,17 @@ const DashboardPage = () => {
 
   const filteredTasks = useMemo(() => {
     let arr = [...tasks];
+
+    // Month/Year filter
+    if (selectedMonth && selectedYear) {
+      arr = arr.filter(t => {
+        const d = new Date(t.date);
+        return (
+          d.getMonth() + 1 === parseInt(selectedMonth) &&
+          d.getFullYear() === parseInt(selectedYear)
+        );
+      });
+    }
 
     // Date search: check for dd-mm-yy or dd-mm-yyyy
     const dateRegex = /^(\d{2})-(\d{2})-(\d{2,4})$/;
@@ -288,43 +301,114 @@ const DashboardPage = () => {
           <StatCard label="Avg/Day" value={avgPerDay} />
         </div>
 
-        {/* Filter/Search/Sort */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center', marginBottom: '2rem' }}>
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <input
-              type="text"
-              placeholder="13-07-25"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              style={{ ...inputStyle, paddingRight: 36, minWidth: 180 }}
-            />
-            <CalendarIcon onClick={() => setShowDatePicker(true)} />
-            {showDatePicker && (
+        {/* Filter/Search/Sort + Month/Year Filter */}
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', marginBottom: '2rem', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', maxWidth: 700, flex: '1 1 0', minWidth: 0 }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', minWidth: 140, maxWidth: 180, flex: '1 1 140px' }}>
               <input
-              type="date"
+                type="text"
+                placeholder="13-07-25"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{ ...inputStyle, paddingRight: 36, minWidth: 100, maxWidth: 180, width: '100%' }}
+              />
+              <CalendarIcon onClick={() => setShowDatePicker(true)} />
+              {showDatePicker && (
+                <input
+                  type="date"
+                  onChange={e => {
+                    if (e.target.value) {
+                      const d = new Date(e.target.value);
+                      const yy = String(d.getFullYear()).slice(2);
+                      const mm = String(d.getMonth() + 1).padStart(2, '0');
+                      const dd = String(d.getDate()).padStart(2, '0');
+                      setSearch(`${dd}-${mm}-${yy}`);
+                      setShowDatePicker(false);
+                    }
+                  }}
+                  className="custom-date-input"
+                  onBlur={() => setShowDatePicker(false)}
+                  autoFocus
+                />
+              )}
+            </div>
+          {/* Year Filter */}
+            <select
+              value={selectedYear}
               onChange={e => {
-                if (e.target.value) {
-                  const d = new Date(e.target.value);
-                  const yy = String(d.getFullYear()).slice(2);
-                  const mm = String(d.getMonth() + 1).padStart(2, '0');
-                  const dd = String(d.getDate()).padStart(2, '0');
-                  setSearch(`${dd}-${mm}-${yy}`);
-                  setShowDatePicker(false);
-                }
+                setSelectedYear(e.target.value);
+                setSelectedMonth(''); // Reset month when year changes
               }}
-              className="custom-date-input"
-              onBlur={() => setShowDatePicker(false)}
-              autoFocus
-            />
-            
+              style={{ ...selectStyle, minWidth: 90, maxWidth: 120, flex: '1 1 90px' }}
+            >
+              <option value="">Year</option>
+              {(() => {
+                const years = [];
+                const currentYear = new Date().getFullYear();
+                for (let y = currentYear; y >= currentYear - 10; y--) {
+                  years.push(y);
+                }
+                return years.map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ));
+              })()}
+            </select>
+          {/* Month Filter: only show if year is selected */}
+            {selectedYear && (
+              <select
+                value={selectedMonth}
+                onChange={e => setSelectedMonth(e.target.value)}
+                style={{ ...selectStyle, minWidth: 90, maxWidth: 120, flex: '1 1 90px' }}
+              >
+                <option value="">Month</option>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                  </option>
+                ))}
+              </select>
+            )}
+            <select value={filter} onChange={e => setFilter(e.target.value)} style={{ ...selectStyle, minWidth: 110, maxWidth: 140, flex: '1 1 110px' }}>
+              {FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
+            </select>
+            <select value={sort} onChange={e => setSort(e.target.value)} style={{ ...selectStyle, minWidth: 150, maxWidth: 200, flex: '1 1 150px' }}>
+              {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+          </div>
+          {/* Clear All Filters Button (red cross, right side) */}
+          <div style={{ minWidth: 80, maxWidth: 120, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 40 }}>
+            {(selectedMonth || selectedYear || filter !== 'All' || search || sort !== 'date_desc') && (
+              <button
+                style={{
+                  background: '#fff',
+                  border: '1.5px solid #dc2626',
+                  borderRadius: '6px',
+                  color: '#dc2626',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  padding: '8px 22px',
+                  marginLeft: '1rem',
+                  height: 40,
+                  minWidth: 70,
+                  boxShadow: '0 1px 6px rgba(220,38,38,0.08)',
+                  transition: 'box-shadow 0.2s',
+                  letterSpacing: '0.5px',
+                }}
+                onClick={() => {
+                  setSelectedMonth('');
+                  setSelectedYear(String(new Date().getFullYear()));
+                  setFilter('All');
+                  setSearch('');
+                  setSort('date_desc');
+                }}
+                type="button"
+                aria-label="Clear All Filters"
+              >
+                Clear
+              </button>
             )}
           </div>
-          <select value={filter} onChange={e => setFilter(e.target.value)} style={selectStyle}>
-            {FILTERS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}
-          </select>
-          <select value={sort} onChange={e => setSort(e.target.value)} style={selectStyle}>
-            {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-          </select>
         </div>
 
         {/* Add Form */}
